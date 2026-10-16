@@ -465,8 +465,8 @@ export function BriefingApp() {
   function renderBlock(block: { topic?: string; items: Item[] }) {
     if (!block.topic) return block.items.map(renderItem);
     return (
-      <div key={`topic:${block.topic}`} className="flex flex-col gap-3 rounded-lg border-l-4 border-blue-300 pl-3 dark:border-sky-700">
-        <h3 className="text-sm font-semibold text-blue-700 dark:text-sky-300">
+      <div key={`topic:${block.topic}`} className="flex flex-col gap-3 border-l-4 border-sky-300 pl-4 dark:border-sky-700">
+        <h3 className="text-sm font-semibold text-brand">
           ▸ {block.topic} <span className="font-normal text-zinc-600 dark:text-zinc-400">({block.items.length}건 같은 주제)</span>
         </h3>
         {block.items.map(renderItem)}
@@ -627,7 +627,7 @@ export function BriefingApp() {
   return (
     <div className="flex flex-col gap-6">
       {/* ② 실행 영역 */}
-      <section aria-labelledby="run-title" className="flex flex-col gap-4 rounded-lg border border-zinc-200 bg-surface p-5 shadow-sm dark:border-zinc-800">
+      <section aria-labelledby="run-title" className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-surface p-6 dark:border-zinc-800">
         <h2 id="run-title" className="text-base font-medium">
           오늘의 브리핑
         </h2>
@@ -641,10 +641,10 @@ export function BriefingApp() {
               aria-pressed={hours === option}
               disabled={busy}
               onClick={() => setHours(option)}
-              className={`rounded-full border px-3 py-1 disabled:cursor-not-allowed disabled:opacity-40 ${
+              className={`rounded-xl px-4 py-2 font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${
                 hours === option
-                  ? "border-blue-600 bg-blue-600 text-white dark:border-sky-400 dark:bg-sky-400 dark:text-zinc-950"
-                  : "border-zinc-300 bg-surface hover:bg-sky-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+                  ? "bg-brand text-white dark:text-zinc-950"
+                  : "bg-soft text-brand hover:opacity-80"
               }`}
             >
               최근 {option}시간
@@ -675,7 +675,7 @@ export function BriefingApp() {
             }}
             aria-invalid={keywordError ? true : undefined}
             aria-describedby={keywordError ? "custom-keywords-error" : undefined}
-            className="w-full rounded-md border border-zinc-300 bg-transparent px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:opacity-40 dark:border-zinc-700"
+            className="w-full rounded-xl border border-zinc-300 bg-surface px-4 py-3 focus:border-brand focus:outline-none focus:ring-2 focus:ring-sky-200 dark:focus:ring-sky-900 disabled:opacity-40 dark:border-zinc-700"
           />
           <div className="flex items-center gap-2">
             <input
@@ -698,7 +698,7 @@ export function BriefingApp() {
             type="button"
             onClick={makeBriefing}
             disabled={busy}
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-sky-400 dark:text-zinc-950 dark:hover:bg-sky-300"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-brand px-6 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 dark:text-zinc-950"
           >
             {busy ? "만드는 중…" : items.length > 0 || phase === "done" ? "다시 만들기" : "브리핑 만들기"}
           </button>
@@ -715,27 +715,27 @@ export function BriefingApp() {
 
       {/* ③ 안내 띠: 일어난 일을 사실 그대로 알린다 */}
       {notices.length > 0 && (
-        <div role="status" className="flex flex-col gap-1 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
+        <div role="status" className="flex flex-col gap-1 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
           {notices.map((notice) => (
             <p key={notice}>{notice}</p>
           ))}
         </div>
       )}
       {overBy > 0 && (
-        <div role="status" className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
+        <div role="status" className="rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
           분량 기준(약 {MAX_SUMMARY_CHARS.toLocaleString()}자)을 {overBy.toLocaleString()}자 넘었습니다. 줄여 주세요.
         </div>
       )}
       {phase === "done" && items.length > 0 && !hasBriefing && view.summarizeTotal > 0 && view.summaryFailed.length === view.summarizeTotal && (
-        <div role="status" className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
+        <div role="status" className="rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
           요약을 만들지 못했습니다. 아래 기사는 제목과 링크만 볼 수 있어요.
         </div>
       )}
 
       {/* 오늘의 물가 동향: 품목·지표별 오르내림과 기사에 나온 수치만 모아 한눈에 보여 준다 */}
       {trends.length > 0 && (
-        <section aria-label="오늘의 물가 동향" className="flex flex-col gap-3 rounded-lg border border-blue-200 bg-sky-50 p-5 dark:border-sky-900 dark:bg-zinc-900">
-          <h2 className="text-lg font-semibold text-blue-800 dark:text-sky-300">오늘의 물가 동향</h2>
+        <section aria-label="오늘의 물가 동향" className="flex flex-col gap-3 rounded-2xl bg-soft p-6">
+          <h2 className="text-xl font-semibold">오늘의 물가 동향</h2>
           <ul className="flex flex-col divide-y divide-blue-100 dark:divide-sky-950">
             {trends.map(({ row, presses }) => (
               <li key={row.name} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2 text-sm">
@@ -768,7 +768,7 @@ export function BriefingApp() {
       {/* ④ 브리핑 영역 — 먼저 인턴이 직접 검색한 결과 */}
       {[...view.customByKeyword.entries()].map(([keyword, list]) => (
         <section key={keyword} aria-label={`직접 검색: ${keyword}`} className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-blue-800 dark:text-sky-300">
+          <h2 className="text-xl font-semibold">
             ■ 직접 검색: {keyword} <span className="text-sm font-normal text-zinc-600 dark:text-zinc-400">({list.length}건)</span>
           </h2>
           {arrange(list).map(renderBlock)}
@@ -780,7 +780,7 @@ export function BriefingApp() {
         if (list.length === 0) return null;
         return (
           <section key={category} aria-label={category} className="flex flex-col gap-3">
-            <h2 className="text-lg font-semibold text-blue-800 dark:text-sky-300">■ {category}</h2>
+            <h2 className="text-xl font-semibold">■ {category}</h2>
             {arrange(list).map(renderBlock)}
           </section>
         );
@@ -788,7 +788,7 @@ export function BriefingApp() {
 
       {/* 제목만 있는 기사는 위의 각 분류 구역에 함께 보여 준다 */}
       {view.lowRelevance.length > 0 && (
-        <details className="rounded-md border border-zinc-200 p-3 text-sm dark:border-zinc-800">
+        <details className="rounded-2xl border border-zinc-200 bg-surface p-4 text-sm dark:border-zinc-800">
           <summary className="cursor-pointer font-medium">물가와 관련이 낮다고 판단해 뺀 기사 {view.lowRelevance.length}건 (눌러서 확인)</summary>
           <div className="mt-2 flex flex-col gap-2">
             {view.lowRelevance.map((item) => (
@@ -804,14 +804,14 @@ export function BriefingApp() {
           <button
             type="button"
             onClick={copyBriefing}
-            className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-soft px-6 text-sm font-semibold text-brand transition hover:opacity-80"
           >
             브리핑 복사
           </button>
           <button
             type="button"
             onClick={downloadBriefing}
-            className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-soft px-6 text-sm font-semibold text-brand transition hover:opacity-80"
           >
             텍스트 파일로 저장
           </button>
@@ -819,7 +819,7 @@ export function BriefingApp() {
             type="button"
             onClick={makeReport}
             disabled={busy || reporting || !hasBriefing}
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-sky-400 dark:text-zinc-950 dark:hover:bg-sky-300"
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-brand px-6 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 dark:text-zinc-950"
           >
             {reporting ? "보고서 만드는 중…" : report ? "요약 보고서 다시 만들기" : "요약 보고서 만들기"}
           </button>
@@ -831,10 +831,10 @@ export function BriefingApp() {
 
       {/* 간단 요약 보고서: 분야·검색어별 요약을 합친 글. 고쳐서 복사하거나 파일로 저장한다 */}
       {report && (
-        <section aria-label="간단 요약 보고서" className="flex flex-col gap-3 rounded-lg border border-blue-200 bg-sky-50 p-5 dark:border-sky-900 dark:bg-zinc-900">
-          <h2 className="text-lg font-semibold text-blue-800 dark:text-sky-300">간단 요약 보고서</h2>
+        <section aria-label="간단 요약 보고서" className="flex flex-col gap-3 rounded-2xl bg-soft p-6">
+          <h2 className="text-xl font-semibold">간단 요약 보고서</h2>
           {report.notes.length > 0 && (
-            <div role="status" className="flex flex-col gap-1 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
+            <div role="status" className="flex flex-col gap-1 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
               {report.notes.map((note) => (
                 <p key={note}>{note}</p>
               ))}
@@ -847,20 +847,20 @@ export function BriefingApp() {
                 value={report.text}
                 onChange={(event) => setReport({ ...report, text: event.target.value })}
                 rows={18}
-                className="w-full resize-y rounded-md border border-zinc-200 bg-surface p-3 text-sm leading-6 dark:border-zinc-700"
+                className="w-full resize-y rounded-xl border border-zinc-200 bg-surface p-3 text-sm leading-6 dark:border-zinc-700"
               />
               <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
                   onClick={() => copyText(report.text, "보고서를 복사했습니다.")}
-                  className="rounded-md border border-zinc-300 bg-surface px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-surface px-6 text-sm font-semibold text-brand transition hover:opacity-80"
                 >
                   보고서 복사
                 </button>
                 <button
                   type="button"
                   onClick={() => downloadText(report.text, "물가요약보고")}
-                  className="rounded-md border border-zinc-300 bg-surface px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-surface px-6 text-sm font-semibold text-brand transition hover:opacity-80"
                 >
                   보고서 파일로 저장
                 </button>
@@ -887,7 +887,7 @@ function SummaryCard({
   const href = safeHref(article.originalUrl ?? article.link);
   const level = importanceOf(item);
   return (
-    <article className="flex flex-col gap-2 rounded-lg border border-zinc-200 bg-surface p-4 shadow-sm dark:border-zinc-800">
+    <article className="flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-surface p-5 dark:border-zinc-800">
       {/* 중요도: 글자와 색으로 표시하고, 인턴이 직접 바꿀 수 있다 */}
       <div className="flex flex-wrap items-center gap-2 text-sm">
         <select
@@ -909,7 +909,7 @@ function SummaryCard({
         value={textOf(item)}
         onChange={(event) => onEdit(event.target.value)}
         rows={4}
-        className="w-full resize-y rounded-md border border-zinc-200 bg-transparent p-2 text-sm leading-6 dark:border-zinc-700"
+        className="w-full resize-y rounded-xl border border-zinc-200 bg-transparent p-3 text-sm leading-6 dark:border-zinc-700"
       />
       {summary?.needsCheck && (
         <p className="text-sm text-red-700 dark:text-red-300">

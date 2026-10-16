@@ -1,49 +1,61 @@
 @import "tailwindcss";
 
-/* 파랑·하늘 계열 색 구성: 화면에서 쓰는 회색(zinc) 단계를 푸른 회색으로 바꿔서 한 번에 분위기를 맞춘다 */
+/*
+ * 디자인 방향: 정부 서비스처럼 차분하고 깔끔한 화면.
+ * 연한 회색 바탕 + 흰 카드, 굵은 큰 제목, 둥근 모서리(12~16px), 파란 버튼(#0066cc)과 연한 하늘색 보조 버튼.
+ * 화면 곳곳의 회색(zinc) 단계는 중립 회색으로 바꿔서 한 번에 분위기를 맞춘다.
+ */
 @theme {
-  --color-zinc-50: #f0f7ff;
-  --color-zinc-100: #e3f0fd;
-  --color-zinc-200: #c9e1f8;
-  --color-zinc-300: #a9cdf0;
-  --color-zinc-400: #8fb9e6;
-  --color-zinc-500: #5b8fc4;
-  --color-zinc-600: #3f6a99;
-  --color-zinc-700: #2f5278;
-  --color-zinc-800: #1e3a5f;
-  --color-zinc-900: #12294a;
-  --color-zinc-950: #0a1a33;
+  --color-zinc-50: #fafafa;
+  --color-zinc-100: #f5f5f7;
+  --color-zinc-200: #e0e0e0;
+  --color-zinc-300: #d2d2d7;
+  --color-zinc-400: #aeaeb2;
+  --color-zinc-500: #86868b;
+  --color-zinc-600: #6e6e73;
+  --color-zinc-700: #424245;
+  --color-zinc-800: #2b2b2e;
+  --color-zinc-900: #1d1d1f;
+  --color-zinc-950: #0f0f10;
 }
 
 :root {
-  --background: #eef6ff;
-  --foreground: #12294a;
+  --background: #f5f5f7;
+  --foreground: #1d1d1f;
   --surface: #ffffff;
+  /* 기본 파랑(버튼·강조)과 연한 하늘색(보조 버튼·안내 상자) */
+  --brand: #0066cc;
+  --soft: #eaf3fc;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-brand: var(--brand);
+  --color-soft: var(--soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #081428;
-    --foreground: #e3f0fd;
-    --surface: #0f213f;
+    --background: #0c0d10;
+    --foreground: #f5f5f7;
+    --surface: #17181c;
+    --brand: #4da3ff;
+    --soft: #14263d;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "Noto Sans KR", sans-serif;
+  letter-spacing: -0.01em;
 }
 
 /* 체크박스·진행 막대 같은 기본 부품도 파란색으로 */
 :root {
-  accent-color: #2563eb;
+  accent-color: #0066cc;
 }
