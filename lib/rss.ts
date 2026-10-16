@@ -174,11 +174,19 @@ export function parsePressFeed(
   return { articles, fetchedCount: items.length };
 }
 
+/** RSS를 하나도 받지 못한 언론사 이름 목록. (한 곳이라도 받았으면 그 언론사는 제외한다) */
+export function findFailedPresses(results: { press: string; ok: boolean }[]): string[] {
+  const okPresses = new Set(results.filter((result) => result.ok).map((result) => result.press));
+  return [...new Set(results.filter((result) => !okPresses.has(result.press)).map((result) => result.press))];
+}
+
 /** RSS 주소가 있는 모든 언론사의 기사를 가져온다. 일부가 실패해도 나머지로 계속 진행한다 */
 export async function fetchPressFeeds(search: SearchOptions): Promise<{
   articles: DesignatedArticle[];
   fetchedCount: number;
   failed: FailedQuery[];
+  /** RSS를 모두 받지 못한 언론사 (구글 뉴스로 대신 찾는다) */
+  failedPresses: string[];
 }> {
   const jobs = PRESS.flatMap((press) => (press.feeds ?? []).map((feed) => ({ press, feed })));
   const settled = await Promise.allSettled(
@@ -203,7 +211,10 @@ export async function fetchPressFeeds(search: SearchOptions): Promise<{
       articles.push(article);
     }
   });
-  return { articles, fetchedCount, failed };
+  const failedPresses = findFailedPresses(
+    settled.map((result, index) => ({ press: jobs[index].press.name, ok: result.status === "fulfilled" })),
+  );
+  return { articles, fetchedCount, failed, failedPresses };
 }
 
 // ---------------------------------------------------------------------------

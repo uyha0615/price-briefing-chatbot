@@ -1,6 +1,7 @@
 // 수집 거르기(lib/filter.ts) 테스트: 지정 언론사 판별, 가짜 주소 차단, 기간 필터, 키워드 분류를 확인한다.
 import { describe, expect, it } from "vitest";
 import { classifyTitle, findPress, hostMatchesDomain, keepRecent } from "@/lib/filter";
+import { findFailedPresses } from "@/lib/rss";
 
 describe("hostMatchesDomain", () => {
   it("같은 도메인과 하위 주소는 통과한다", () => {
@@ -42,6 +43,26 @@ describe("classifyTitle", () => {
   });
   it("휘발유 가격 기사는 석유류로 분류한다", () => {
     expect(classifyTitle("휘발유 가격 5주 연속 하락")?.category).toBe("석유류");
+  });
+});
+
+describe("findFailedPresses (RSS가 막힌 언론사 찾기)", () => {
+  it("모든 RSS가 실패한 언론사만 돌려준다", () => {
+    expect(
+      findFailedPresses([
+        { press: "한국경제", ok: false },
+        { press: "한국경제", ok: false },
+        { press: "조선일보", ok: true },
+      ]),
+    ).toEqual(["한국경제"]);
+  });
+  it("RSS가 하나라도 성공한 언론사는 실패로 보지 않는다", () => {
+    expect(
+      findFailedPresses([
+        { press: "연합뉴스", ok: false },
+        { press: "연합뉴스", ok: true },
+      ]),
+    ).toEqual([]);
   });
 });
 
