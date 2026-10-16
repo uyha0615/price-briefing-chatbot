@@ -32,8 +32,8 @@ export interface DesignatedArticle extends Article {
 /** 본문 읽기까지 마친 기사 */
 export interface BriefingArticle extends DesignatedArticle {
   /**
-   * ok: 본문을 읽음 / failed: 읽으려 했지만 실패("본문 확인 불가 — 제목만") /
-   * not-selected: 20건 제한 때문에 읽지 않음("N건은 제목만")
+   * ok: 본문을 읽음 / failed: 읽으려 했지만 실패(요약 없이 제목·링크만 한 줄로 표시) /
+   * not-selected: 20건 제한 때문에 읽지 않음(마찬가지로 제목·링크만 표시)
    */
   bodyStatus: "ok" | "failed" | "not-selected";
   /** 읽은 본문 (bodyStatus가 ok일 때만) */

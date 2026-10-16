@@ -245,10 +245,10 @@ export function BriefingApp() {
           }
           setIrrelevantTitles(Object.fromEntries([...irrelevantLinks].map((link) => [link, true])));
         } else {
-          setNotices((current) => [...current, `제목만 있는 기사의 관련성을 거르지 못했습니다(${result.message}). 거르지 않고 보여 드려요.`]);
+          setNotices((current) => [...current, `일부 기사의 관련성을 거르지 못했습니다(${result.message}). 거르지 않고 보여 드려요.`]);
         }
       } catch {
-        setNotices((current) => [...current, "제목만 있는 기사의 관련성을 거르지 못했습니다. 거르지 않고 보여 드려요."]);
+        setNotices((current) => [...current, "일부 기사의 관련성을 거르지 못했습니다. 거르지 않고 보여 드려요."]);
       }
     }
 
@@ -447,16 +447,8 @@ export function BriefingApp() {
       <TitleRow
         key={item.article.link}
         item={item}
-        badge={
-          item.status === "failed"
-            ? "요약 실패 — 제목만"
-            : item.status === "pending" || item.status === "summarizing"
-              ? "요약 중…"
-              : item.article.bodyStatus === "failed"
-                ? "본문 확인 불가 — 제목만"
-                : "제목만"
-        }
-        note={item.error ?? item.article.bodyNote}
+        // 요약 중일 때만 표시를 붙이고, 요약이 없는 기사는 표시 없이 제목·언론사·시간만 보여 준다
+        badge={item.status === "pending" || item.status === "summarizing" ? "요약 중…" : undefined}
       />
     );
   }
@@ -478,7 +470,7 @@ export function BriefingApp() {
   function buildBriefingText(): string {
     const lines: string[] = [`물가 브리핑 (${new Date().toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })})`];
     const addSection = (heading: string, list: Item[]) => {
-      // 요약 중인 기사는 뺀다. 제목만 있는 기사는 "[제목만]"으로 함께 적는다
+      // 요약 중인 기사는 뺀다. 요약이 없는 기사는 제목과 출처만 함께 적는다
       const readyList = list.filter((item) => item.status === "done" || item.status === "failed");
       if (readyList.length === 0) return;
       lines.push("", heading);
@@ -487,7 +479,7 @@ export function BriefingApp() {
         for (const item of block.items) {
           const link = item.article.originalUrl ?? item.article.link;
           if (!item.summary) {
-            lines.push(`- [제목만] ${item.article.title}`, `  (${item.article.press}, ${link})`);
+            lines.push(`- ${item.article.title}`, `  (${item.article.press}, ${link})`);
             continue;
           }
           lines.push(`- [${importanceOf(item)}] ${textOf(item)}`, `  (${item.article.press}, "${item.article.title}", ${link})`);
@@ -703,7 +695,7 @@ export function BriefingApp() {
             {busy ? "만드는 중…" : items.length > 0 || phase === "done" ? "다시 만들기" : "브리핑 만들기"}
           </button>
           {phase === "collecting" && <span className="text-sm text-zinc-600 dark:text-zinc-400">기사를 모으고 본문을 읽는 중입니다…</span>}
-          {phase === "grouping" && <span className="text-sm text-zinc-600 dark:text-zinc-400">제목만 있는 기사를 거르고, 같은 주제로 묶고, 물가 동향을 정리하는 중입니다…</span>}
+          {phase === "grouping" && <span className="text-sm text-zinc-600 dark:text-zinc-400">관련 없는 기사를 거르고, 같은 주제로 묶고, 물가 동향을 정리하는 중입니다…</span>}
           {phase === "summarizing" && (
             <span className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
               <progress value={view.summarizeDone} max={Math.max(view.summarizeTotal, 1)} className="h-2 w-40" />

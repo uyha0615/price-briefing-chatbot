@@ -35,7 +35,7 @@ export async function collectBriefingArticles(
   const pressFailures: CollectResult["failedQueries"] = [];
   for (const failure of pressFeeds.failed) {
     const pressName = failure.query.replace(/ RSS$/, "");
-    const reason = rssBlocked.has(pressName) ? `${failure.reason}. 구글 뉴스로 대신 찾았고 제목만 볼 수 있어요` : failure.reason;
+    const reason = rssBlocked.has(pressName) ? `${failure.reason}. 구글 뉴스로 대신 찾았어요` : failure.reason;
     if (!pressFailures.some((item) => item.query === failure.query && item.reason === reason)) {
       pressFailures.push({ query: failure.query, reason });
     }
