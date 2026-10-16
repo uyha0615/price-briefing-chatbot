@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 물가 브리핑 챗봇
 
-## Getting Started
+청년인턴이 매일 아침 직접 하던 **물가 · 농축수산물 · 석유류 기사 모니터링과 요약**을 버튼 한 번으로 줄여 주는 웹 앱입니다.
+주요 언론사의 최근 기사를 모아 AI로 요약하고, 분야별로 정리한 브리핑 초안과 간단 요약 보고서를 만들어 줍니다.
+(기존에는 1~2시간 걸리던 일을 몇십 초로 줄이는 것이 목표입니다.)
 
-First, run the development server:
+## 이런 일을 합니다
+
+- **자동 수집**: 지정 언론사 22곳의 RSS(공개 뉴스 피드)와 구글 뉴스에서 최근 6·12·24·48·72시간 기사를 모읍니다.
+- **AI 요약**: 기사 본문을 읽고 기사마다 3문장 이내로 요약합니다. 요약에 **기사에 없는 숫자가 있으면 코드가 다시 걸러냅니다.**
+- **분류와 정리**: 농축수산물 / 석유류 / 기타 물가로 나누고, 같은 사건 기사는 한 묶음으로 보여 줍니다.
+- **중요도 표시**: 긴급(신속 보고) · 주의(공유·확인) · 참고를 AI가 먼저 표시하고, 사람이 바꿀 수 있습니다.
+- **오늘의 물가 동향 카드**: 품목·지표별 오름/내림과 기사에 적힌 수치만 모아 보여 줍니다.
+- **간단 요약 보고서**: 분야별 요약을 합친 한 장짜리 보고 초안을 만들고, 고쳐서 복사하거나 텍스트 파일로 저장할 수 있습니다.
+- **직접 검색어**: 고정 키워드 외에 원하는 말을 더할 수 있고, `-단어`로 빼고 싶은 말을 지정할 수 있습니다.
+- **출처 표시**: 모든 요약에 언론사명·제목·링크가 붙습니다. 본문을 못 읽은 기사는 "본문 확인 불가 — 제목만"으로 표시하고 추측해서 요약하지 않습니다.
+
+## 사용 기술
+
+Next.js (App Router) · TypeScript · Tailwind CSS · OpenAI API (서버에서만 호출) · Vitest(자동 테스트) · Vercel(배포)
+
+## 직접 실행해 보기
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+프로젝트 맨 위 폴더에 `.env` 파일을 만들고 OpenAI API 키를 넣습니다. (`.env`는 `.gitignore`에 등록되어 있어 저장소에 올라가지 않습니다.)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+OPENAI_API_KEY=여기에_본인_키
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev     # 개발 서버 실행 → http://localhost:3000
+npm run test    # 자동 테스트
+npm run lint    # 코드 검사
+npm run build   # 배포용 빌드
+```
 
-## Learn More
+> Windows PowerShell에서 스크립트 실행이 막혀 있다면 `npm.cmd run dev`처럼 `.cmd`를 붙여 실행하세요.
 
-To learn more about Next.js, take a look at the following resources:
+## 폴더 구조
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| 위치 | 설명 |
+|---|---|
+| `app/` | 화면과 서버 API(`/api/articles`, `/api/summarize`, `/api/group`, `/api/trend`, `/api/relevance`, `/api/report`) |
+| `lib/` | 수집·거르기·중복 제거·본문 읽기·AI 요약·검증 등 핵심 코드. 지정 언론사와 키워드는 `lib/config.ts` 한 곳에서 관리 |
+| `tests/` | 자동 테스트 (숫자 검증, 검색어, 중복 제거, 주소 안전 검사 등) |
+| `PRD.md` · `PLAN.md` · `DESIGN.md` · `CHECK.md` | 기획·계획·설계·점검 문서 |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 안전과 한계
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- OpenAI 키는 서버 코드에서만 읽으며, 브라우저로 전달되지 않습니다.
+- AI가 만든 요약·중요도·묶음·보고서는 **초안**입니다. 보고 전에 사람이 확인해야 합니다.
+- 방송사(KBS·MBC·YTN·EBS) 등 일부 언론사는 본문을 읽지 못해 제목만 표시될 수 있습니다.
+- **접속 제한(로그인)이 없습니다.** 공개 주소에서는 누구나 사용할 수 있어 AI 사용 비용이 발생할 수 있으니, 실제 운영 전에는 접근 제한과 사용량 상한을 설정하세요.
+- 기사 본문의 수집·AI 요약·내부 공유가 각 언론사의 이용 약관과 저작권에 맞는지는 별도로 확인이 필요합니다.

@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 삭제 대기 파일 (사용자가 직접 확인 후 삭제)
+/trash-can/
+
+# bkit 도구의 세션 기록 (커밋하지 않음)
+/.bkit/

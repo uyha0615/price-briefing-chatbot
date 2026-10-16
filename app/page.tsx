@@ -1,69 +1,39 @@
-import Image from "next/image";
+import { CATEGORIES, PRESS, SEARCH_QUERIES } from "@/lib/config";
+import { BriefingApp } from "./_components/briefing-app";
+import { TodayDate } from "./_components/today-date";
 
+// Design Ref: DESIGN §2 — ①머리말, ②~⑤ 브리핑 화면(BriefingApp), 아래에 대상 안내.
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-6 py-12">
+      {/* ① 머리말 */}
+      <header className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-blue-800 dark:text-sky-300">물가 브리핑 챗봇</h1>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <TodayDate />
+        </p>
+      </header>
+
+      {/* ②~⑤ 실행, 안내, 브리핑, 도구 */}
+      <BriefingApp />
+
+      {/* 어떤 기사를 모으는지 (설정 파일의 값을 보기만 한다) */}
+      <section aria-label="수집 대상" className="flex flex-col gap-3 border-t border-zinc-200 pt-6 text-sm dark:border-zinc-800">
+        <h2 className="font-medium">수집 대상</h2>
+        {CATEGORIES.map((category) => (
+          <div key={category} className="flex flex-col gap-1">
+            <span className="text-zinc-600 dark:text-zinc-400">{category}</span>
+            <ul className="flex flex-wrap gap-2">
+              {SEARCH_QUERIES[category].map((query) => (
+                <li key={query} className="rounded-full bg-zinc-100 px-3 py-1 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                  {query}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <p className="text-zinc-600 dark:text-zinc-400">지정 언론사 {PRESS.length}곳의 기사를 대상으로 하고, 기간은 위에서 고른 시간(기본 24시간)을 따릅니다.</p>
+      </section>
+    </main>
   );
 }

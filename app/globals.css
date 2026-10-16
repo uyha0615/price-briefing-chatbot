@@ -1,21 +1,39 @@
 @import "tailwindcss";
 
+/* 파랑·하늘 계열 색 구성: 화면에서 쓰는 회색(zinc) 단계를 푸른 회색으로 바꿔서 한 번에 분위기를 맞춘다 */
+@theme {
+  --color-zinc-50: #f0f7ff;
+  --color-zinc-100: #e3f0fd;
+  --color-zinc-200: #c9e1f8;
+  --color-zinc-300: #a9cdf0;
+  --color-zinc-400: #8fb9e6;
+  --color-zinc-500: #5b8fc4;
+  --color-zinc-600: #3f6a99;
+  --color-zinc-700: #2f5278;
+  --color-zinc-800: #1e3a5f;
+  --color-zinc-900: #12294a;
+  --color-zinc-950: #0a1a33;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #eef6ff;
+  --foreground: #12294a;
+  --surface: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #081428;
+    --foreground: #e3f0fd;
+    --surface: #0f213f;
   }
 }
 
@@ -23,4 +41,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 체크박스·진행 막대 같은 기본 부품도 파란색으로 */
+:root {
+  accent-color: #2563eb;
 }
